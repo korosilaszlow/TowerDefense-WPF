@@ -1,0 +1,103 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="resources\attack_soldier1.png" />
+    <None Remove="resources\attack_soldier2.png" />
+    <None Remove="resources\attack_soldier_base.png" />
+    <None Remove="resources\buy_attack.png" />
+    <None Remove="resources\buy_tank.png" />
+    <None Remove="resources\castle1.jpg" />
+    <None Remove="resources\castle2.jpg" />
+    <None Remove="resources\castle_base.jpg" />
+    <None Remove="resources\catle1.jpg" />
+    <None Remove="resources\damage_tower1.jpg" />
+    <None Remove="resources\damage_tower2.jpg" />
+    <None Remove="resources\damage_tower_base.png" />
+    <None Remove="resources\explosion.png" />
+    <None Remove="resources\level1.png" />
+    <None Remove="resources\level2.png" />
+    <None Remove="resources\level3.png" />
+    <None Remove="resources\level4.png" />
+    <None Remove="resources\level5.png" />
+    <None Remove="resources\money.png" />
+    <None Remove="resources\mountain.jpg" />
+    <None Remove="resources\next_turn.png" />
+    <None Remove="resources\pause_lines.png" />
+    <None Remove="resources\pause_triangle.png" />
+    <None Remove="resources\plain.jpg" />
+    <None Remove="resources\plain_burning.jpg" />
+    <None Remove="resources\ranged_tower1.jpg" />
+    <None Remove="resources\ranged_tower2.jpg" />
+    <None Remove="resources\ranged_tower_base.png" />
+    <None Remove="resources\remove_tower.png" />
+    <None Remove="resources\save.png" />
+    <None Remove="resources\skull.png" />
+    <None Remove="resources\support_tower1.jpg" />
+    <None Remove="resources\support_tower2.jpg" />
+    <None Remove="resources\support_tower_base.png" />
+    <None Remove="resources\tank_soldier1.png" />
+    <None Remove="resources\tank_soldier2.png" />
+    <None Remove="resources\tank_soldier_base.png" />
+    <None Remove="resources\transparent.png" />
+    <None Remove="resources\upgrade_tower.png" />
+    <None Remove="resources\water.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\pause_lines.png" />
+    <Resource Include="resources\pause_triangle.png" />
+    <Resource Include="resources\plain_burning.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TowerDefenseModel\TowerDefenseModel.csproj" />
+    <ProjectReference Include="..\TowerDefensePersistence\TowerDefensePersistence.csproj" />
+    <ProjectReference Include="..\TowerDefenseViewModel\TowerDefenseViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\attack_soldier1.png" />
+    <Resource Include="resources\attack_soldier2.png" />
+    <Resource Include="resources\attack_soldier_base.png" />
+    <Resource Include="resources\buy_attack.png" />
+    <Resource Include="resources\buy_tank.png" />
+    <Resource Include="resources\castle1.jpg" />
+    <Resource Include="resources\castle2.jpg" />
+    <Resource Include="resources\castle_base.jpg" />
+    <Resource Include="resources\damage_tower1.jpg" />
+    <Resource Include="resources\damage_tower2.jpg" />
+    <Resource Include="resources\damage_tower_base.png" />
+    <Resource Include="resources\explosion.png" />
+    <Resource Include="resources\level1.png" />
+    <Resource Include="resources\level2.png" />
+    <Resource Include="resources\level3.png" />
+    <Resource Include="resources\level4.png" />
+    <Resource Include="resources\level5.png" />
+    <Resource Include="resources\money.png" />
+    <Resource Include="resources\mountain.jpg" />
+    <Resource Include="resources\next_turn.png" />
+    <Resource Include="resources\plain.jpg" />
+    <Resource Include="resources\ranged_tower1.jpg" />
+    <Resource Include="resources\ranged_tower2.jpg" />
+    <Resource Include="resources\ranged_tower_base.png" />
+    <Resource Include="resources\remove_tower.png" />
+    <Resource Include="resources\save.png" />
+    <Resource Include="resources\skull.png" />
+    <Resource Include="resources\support_tower1.jpg" />
+    <Resource Include="resources\support_tower2.jpg" />
+    <Resource Include="resources\support_tower_base.png" />
+    <Resource Include="resources\tank_soldier1.png" />
+    <Resource Include="resources\tank_soldier2.png" />
+    <Resource Include="resources\tank_soldier_base.png" />
+    <Resource Include="resources\transparent.png" />
+    <Resource Include="resources\upgrade_tower.png" />
+    <Resource Include="resources\water.jpg" />
+  </ItemGroup>
+
+</Project>

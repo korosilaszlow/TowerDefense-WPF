@@ -1,0 +1,366 @@
+﻿<Page x:Class="TowerDefenseView.GamePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TowerDefenseView"
+      
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="1000"
+      Title="GamePage">
+
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition x:Name="gridRowDef" Height="*"></RowDefinition>
+            <RowDefinition Height="80"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!--Menu-->
+        <Menu Grid.Row="0" DockPanel.Dock="Top">
+            <MenuItem Header="Fájl">
+                <MenuItem Header="Új játék" Command="{Binding NewGameCommand}" />
+                <Separator />
+                <MenuItem Header="Játék betöltése" Command="{Binding LoadGameCommand}" />
+                <MenuItem IsEnabled="{Binding CanInteractAsPlayer}"  Header="Játék mentése" Command="{Binding SaveGameCommand}" />
+                <Separator />
+                <MenuItem IsEnabled="{Binding NotSimulation}" Header="Váltás szerkesztő módra" Command="{Binding EditorModeCommand}" />
+                <Separator />
+                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}" />
+            </MenuItem>
+
+
+            <Button HorizontalAlignment="Right" Content="  ?  " Command="{Binding DisplayHelpCommand}" />
+        </Menu>
+        <!--Grid-->
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition x:Name="gridWidthCol"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <!--CurrentPlayer colour display-->
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding GamePhase}" Value="Simulation">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="White" Offset="0" />
+                                        <GradientStop Color="LightGray"  Offset="0.15" />
+                                        <GradientStop Color="Gray"  Offset="0.5" />
+                                        <GradientStop Color="LightGray"  Offset="0.85" />
+                                        <GradientStop Color="White" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding GamePhase}" Value="Player1">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="White" Offset="0" />
+                                        <GradientStop Color="LightSteelBlue"  Offset="0.15" />
+                                        <GradientStop Color="SteelBlue"  Offset="0.5" />
+                                        <GradientStop Color="LightSteelBlue"  Offset="0.85" />
+                                        <GradientStop Color="White" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding GamePhase}" Value="Player2">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="White" Offset="0" />
+                                        <GradientStop Color="#FFD0D0"  Offset="0.15" />
+                                        <GradientStop Color="IndianRed"  Offset="0.5" />
+                                        <GradientStop Color="#FFD0D0"  Offset="0.85" />
+                                        <GradientStop Color="White" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <!--Item Grid-->
+            <ItemsControl Grid.Column="1" x:Name="itemsControl" ItemsSource="{Binding Fields}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid x:Name="uniformGrid" Rows="{Binding GridRows}" Columns="{Binding GridCols}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Grid.Row" Value="{Binding Row}" />
+                        <Setter Property="Grid.Column" Value="{Binding Col}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+
+                <ItemsControl.ItemTemplate >
+
+                    <!--Cell-->
+                    <DataTemplate>
+                        <Button VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  BorderThickness="2" BorderBrush="Black" Margin="0" Padding="0" Command="{Binding ClickCellCommand}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <!--CellType display-->
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="{Binding BGImagePath}">
+                                    </ImageBrush>
+                                </Grid.Background>
+
+                                <!--Soldiers, towerlevel display-->
+                                <Image Grid.Row="0" Grid.Column="0">
+                                    <Image.Style>
+                                        <Style TargetType="Image" >
+                                            <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Player1AttackSoldierInfo}" Value="0" />
+                                                        <Condition Binding="{Binding TowerLevel}" Value="0" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+
+                                                <DataTrigger Binding="{Binding Player1AttackSoldierInfo}" Value="1">
+                                                    <Setter Property="Source" Value="../../../resources/attack_soldier1.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player1AttackSoldierInfo}" Value="-1">
+                                                    <Setter Property="Source" Value="../../../resources/skull.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TowerLevel}" Value="1">
+                                                    <Setter Property="Source" Value="../../../resources/level1.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TowerLevel}" Value="2">
+                                                    <Setter Property="Source" Value="../../../resources/level2.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TowerLevel}" Value="3">
+                                                    <Setter Property="Source" Value="../../../resources/level3.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TowerLevel}" Value="4">
+                                                    <Setter Property="Source" Value="../../../resources/level4.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TowerLevel}" Value="5">
+                                                    <Setter Property="Source" Value="../../../resources/level5.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+
+                                <!--Soldiers, tower fire display-->
+                                <Image  Grid.Row="0" Grid.Column="1">
+                                    <Image.Style>
+                                        <Style TargetType="Image" >
+                                            <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Player2AttackSoldierInfo}" Value="0" />
+                                                        <Condition Binding="{Binding ShowExplosion}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                                <DataTrigger Binding="{Binding Player2AttackSoldierInfo}" Value="0">
+                                                    <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player2AttackSoldierInfo}" Value="1">
+                                                    <Setter Property="Source" Value="../../../resources/attack_soldier2.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player2AttackSoldierInfo}" Value="-1">
+                                                    <Setter Property="Source" Value="../../../resources/skull.png"/>
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsTower}" Value="True" />
+                                                        <Condition Binding="{Binding ShowExplosion}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Source" Value="../../../resources/explosion.png"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+
+                                <!--Soldiers display-->
+                                <Image Grid.Row="1" Grid.Column="0">
+                                    <Image.Style>
+                                        <Style TargetType="Image" >
+                                            <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Player1TankSoldierInfo}" Value="0">
+                                                    <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player1TankSoldierInfo}" Value="1">
+                                                    <Setter Property="Source" Value="../../../resources/tank_soldier1.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player1TankSoldierInfo}" Value="-1">
+                                                    <Setter Property="Source" Value="../../../resources/skull.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+
+                                <!--Soldiers display-->
+                                <Image Grid.Row="1" Grid.Column="1">
+                                    <Image.Style>
+                                        <Style TargetType="Image" >
+                                            <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Player2TankSoldierInfo}" Value="0">
+                                                    <Setter Property="Source" Value="../../../resources/transparent.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player2TankSoldierInfo}" Value="1">
+                                                    <Setter Property="Source" Value="../../../resources/tank_soldier2.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Player2TankSoldierInfo}" Value="-1">
+                                                    <Setter Property="Source" Value="../../../resources/skull.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <!-- Buttons -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <local:BuyButton IsEnabled="{Binding CanInteractAsPlayer}" Grid.Column="0" Command="{Binding ChangePlayerActionMode}" CommandParameter="BuildRangedTower" 
+                ItemImageSource="../../../resources/ranged_tower_base.png" MoneyImageSource="../../../resources/money.png" 
+                ToolTipText="Távtorony vétele" MoneyCost="{Binding RangedTowerCost}" HighLightCondition="1" HighLightNum="{Binding PlayerActionModeNum}"/>
+            <local:BuyButton IsEnabled="{Binding CanInteractAsPlayer}"  Grid.Column="1" Command="{Binding ChangePlayerActionMode}" CommandParameter="BuildSupportTower" 
+                ItemImageSource="../../../resources/support_tower_base.png" MoneyImageSource="../../../resources/money.png" 
+                ToolTipText="Segédtorony vétele" MoneyCost="{Binding SupportTowerCost}" HighLightCondition="3" HighLightNum="{Binding PlayerActionModeNum}"/>
+            <local:BuyButton IsEnabled="{Binding CanInteractAsPlayer}"  Grid.Column="2" Command="{Binding ChangePlayerActionMode}" CommandParameter="BuildDamageTower" 
+                ItemImageSource="../../../resources/damage_tower_base.png" MoneyImageSource="../../../resources/money.png" 
+                ToolTipText="Sebzőtorony vétele" MoneyCost="{Binding DamageTowerCost}" HighLightCondition="2" HighLightNum="{Binding PlayerActionModeNum}"/>
+            <local:PlayerInteractionButton  IsEnabled="{Binding CanInteractAsPlayer}"  Grid.Column="3"  Command="{Binding ChangePlayerActionMode}" CommandParameter="UpgradeTower" 
+                ItemImageSource="../../../resources/upgrade_tower.png" ToolTipText="Torony fejlesztése" HighLightCondition="4" HighLightNum="{Binding PlayerActionModeNum}"/>
+            <local:PlayerInteractionButton IsEnabled="{Binding CanInteractAsPlayer}"  Grid.Column="4"  Command="{Binding ChangePlayerActionMode}" CommandParameter="RemoveTower" 
+                ItemImageSource="../../../resources/remove_tower.png" ToolTipText="Torony lerombolása" HighLightCondition="5" HighLightNum="{Binding PlayerActionModeNum}"/>
+            <local:BuyButton IsEnabled="{Binding CanInteractAsPlayer}" Grid.Column="5" Command="{Binding BuyAttackSoldierCommand}"
+                ItemImageSource="../../../resources/buy_attack.png" MoneyImageSource="../../../resources/money.png" 
+                ToolTipText="Támadó katona vétele" MoneyCost="{Binding AttackSoldierCost}" />
+            <local:BuyButton IsEnabled="{Binding CanInteractAsPlayer}" Grid.Column="6" Command="{Binding BuyTankSoldierCommand}"
+                ItemImageSource="../../../resources/buy_tank.png"   MoneyImageSource="../../../resources/money.png"
+                ToolTipText="Tank katona vétele" MoneyCost="{Binding TankSoldierCost}" />
+            <local:PlayerInteractionButton IsEnabled="{Binding CanInteractAsPlayer}" Grid.Column="7" Command="{Binding EndTurnCommand}"
+                ItemImageSource="../../../resources/next_turn.png" ToolTipText="Kör befejezése" Background="White"/>
+            <local:PlayerInteractionButton Grid.Column="8" Command="{Binding PauseCommand}"
+                ToolTipText="Szünet" Background="White" IsEnabled="{Binding CanUsePauseButton}">
+                <local:PlayerInteractionButton.Style>
+                    <Style TargetType="local:PlayerInteractionButton">
+                        <Setter Property="ItemImageSource" Value="../../../resources/pause_lines.png"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SimulationIsPaused}" Value="True">
+                                <Setter Property="ItemImageSource" Value="../../../resources/pause_triangle.png"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SimulationIsPaused}" Value="False">
+                                <Setter Property="ItemImageSource" Value="../../../resources/pause_lines.png"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </local:PlayerInteractionButton.Style>
+
+            </local:PlayerInteractionButton>
+        </Grid>
+
+        <!-- Status bar (messages to player) -->
+        <StatusBar Grid.Row="3">
+            <Label>
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="0">
+                                <Setter Value="" Property="Content"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="1">
+                                <Setter Value="Távolsági torony vásárlása: kattints a cellára, ahova szeretnéd építeni" Property="Content"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="2">
+                                <Setter Value="Sebzőtorony vásárlása: kattints a cellára, ahova szeretnéd építeni" Property="Content"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="3">
+                                <Setter Value="Segédtorony vásárlása: kattints a cellára, ahova szeretnéd építeni" Property="Content"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="4">
+                                <Setter Value="Torony fejlesztése: kattints arra a toronyra, amit fejleszteni szeretnél" Property="Content"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PlayerActionModeNum}" Value="5">
+                                <Setter Value="Torony rombolása: kattints arra a toronyra, amit rombolni szeretnél" Property="Content"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+
+        </StatusBar>
+        <!-- Status bar (game info) -->
+        <StatusBar  Grid.Row="4">
+                    <DockPanel>
+                    <DockPanel DockPanel.Dock="Left">
+                            <Label HorizontalAlignment="Left" Content="Kék játékos adatok" />
+                            <Label HorizontalAlignment="Left" Content="Kastély: " />
+                            <Label HorizontalAlignment="Left" Content="{Binding Player1CastleHP}" />
+                            <Label HorizontalAlignment="Left" Content="Arany: " />
+                            <Label HorizontalAlignment="Left" Content="{Binding Player1Money}" />
+                            <Label HorizontalAlignment="Left" Content="Katonák: "></Label>
+                            <Label HorizontalAlignment="Left" Content="{Binding Player1UnitsText}" />
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Right">
+                            <Label HorizontalAlignment="Right" Content="Piros játékos adatok"/>
+                            <Label HorizontalAlignment="Right" Content="Kastély: " />
+                            <Label HorizontalAlignment="Right" Content="{Binding Player2CastleHP}" />
+                            <Label HorizontalAlignment="Left" Content="Arany: " />
+                            <Label HorizontalAlignment="Left" Content="{Binding Player2Money}" />
+                            <Label HorizontalAlignment="Right" Content="Katonák: "></Label>
+                            <Label HorizontalAlignment="Right" Content="{Binding Player2UnitsText}" />
+                    </DockPanel>
+                
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Right">
+                <Label HorizontalAlignment="Right" Content="{Binding StepCounterText}"/>
+            </DockPanel>
+        </StatusBar>
+                    
+    </Grid>
+</Page>

@@ -1,0 +1,76 @@
+﻿<Window x:Class="TowerDefenseView.ExtraSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TowerDefenseView"
+        mc:Ignorable="d"        
+        Title="ExtraSettingsWindow" Height="150" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label  Grid.Column="0" Grid.Row="0">Sorok száma</Label>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="RowsTextBox" Grid.Column="0" ></TextBox>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button x:Name="RowsPlus" Content="+" Grid.Row="0"></Button>
+                <Button x:Name="RowsMinus" Content="-" Grid.Row="1"></Button>
+            </Grid>
+        </Grid>
+        
+        <Label  Grid.Column="1" Grid.Row="0">Oszlopok száma</Label>
+        <Grid  Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="ColsTextBox" Grid.Column="0" ></TextBox>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button x:Name="ColsPlus" Content="+" Grid.Row="0"></Button>
+                <Button x:Name="ColsMinus" Content="-" Grid.Row="1"></Button>
+            </Grid>
+        </Grid>
+
+        <Label  Grid.Column="2" Grid.Row="0">Kezdőtőke</Label>
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="MoneyTextBox"  Grid.Column="0"  ></TextBox>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button x:Name="MoneyPlus" Content="+" Grid.Row="0"></Button>
+                <Button x:Name="MoneyMinus" Content="-" Grid.Row="1"></Button>
+            </Grid>
+        </Grid>
+
+        <Button x:Name="okButton" Grid.Column="0" Grid.Row="2" Command="{Binding OKCommand}"> OK</Button>
+        <Button x:Name="cancelButton" Grid.Column="2" Grid.Row="2" Command="{Binding CancelCommand}">Mégse</Button>
+
+    </Grid>
+</Window>

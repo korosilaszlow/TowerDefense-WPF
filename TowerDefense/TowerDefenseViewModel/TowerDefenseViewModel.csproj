@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TowerDefenseModel\TowerDefenseModel.csproj" />
+    <ProjectReference Include="..\TowerDefensePersistence\TowerDefensePersistence.csproj" />
+  </ItemGroup>
+
+</Project>

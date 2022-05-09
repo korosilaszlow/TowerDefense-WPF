@@ -1,0 +1,50 @@
+# Default image (https://hub.docker.com/_/microsoft-dotnet-core-sdk/)
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+stages:
+  - build
+  - test
+  - upload
+
+before_script:
+  - dotnet --version
+
+build_model:
+  stage: build
+  script:
+    - dotnet build TowerDefense/TowerDefenseModel
+
+
+build_view:
+  stage: build
+  image: mcr.microsoft.com/dotnet/framework/sdk:4.8
+  tags: [windows]
+  script:
+    - dotnet build TowerDefense/TowerDefense.sln
+    - dotnet publish TowerDefense/TowerDefenseView\TowerDefenseView.csproj -c Release -o publish
+  artifacts:
+    name: 'td_binaries'
+    expire_in: 2 days
+    paths:
+      - publish
+
+tests:
+  stage: test
+  needs: [build_model]
+  script:
+    - dotnet test TowerDefense/TowerDefenseTests
+
+upload_binaries:
+  stage: upload
+  image: ubuntu:20.04
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^v.*$/'
+  variables:
+    PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/windows-release/$CI_COMMIT_TAG"
+  before_script:
+    - apt-get update -y
+    - apt-get install -y zip curl
+  script:
+    - zip -r publish.zip publish/
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file publish.zip "${PACKAGE_REGISTRY_URL}/windows-release-$CI_COMMIT_TAG.zip"
